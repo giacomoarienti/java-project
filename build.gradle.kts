@@ -4,4 +4,30 @@
  * This is a general purpose Gradle build.
  * To learn more about Gradle by exploring our Samples at https://docs.gradle.org/8.2.1/samples
  */
-plugins { java }
+plugins {
+    java
+    application
+    id("com.github.johnrengelman.shadow") version "7.0.0"
+}
+
+val myMainClass: String by project
+application {
+    mainClass.set(myMainClass)
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    val junitVersion = "5.9.1"
+    testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVersion")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:$junitVersion")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
+}
+
+tasks.test {
+    useJUnitPlatform()
+    testLogging { events(TestLogEvent.values()) }
+    testLogging.showStandardStreams = true
+}
